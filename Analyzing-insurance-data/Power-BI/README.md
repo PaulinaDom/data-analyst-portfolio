@@ -17,7 +17,7 @@ The dataset was sourced from Kaggle and contains the following attributes:
 - **region:** The region where the insured individual resides  
 - **charges:** Total insurance charges for the individual  
 
-🔗 [**Dataset link (to be added)**]()
+🔗 [**Dataset link**](https://www.kaggle.com/datasets/teertha/ushealthinsurancedataset/data)
 
 ---
 
