@@ -116,6 +116,7 @@ VAR lastsalesdate = MAX(Fact_Sales[Date])
 VAR lastsalesdatePY = EDATE(lastsalesdate, -12)
 RETURN
     Dim_Date[Date] <= lastsalesdatePY
+```
 
 This ensures that PYTD values are calculated only whena valid comparison exists.
 
@@ -130,9 +131,11 @@ Sales = SUM(Fact_Sales[Sales_USD])
 Quantity = SUM(Fact_Sales[quantity])
 Cost of Goods = SUM(Fact_Sales[COGS_USD])
 Gross Profit = [Sales] - [Cost of Goods]
+```
 
 ### YEar-to-date Measures
 ```DAX
 YTD_Sales = TOTALYTD([Sales], Fact_Sales[Date])
 YTD_Quantity = TOTALYTD([Quantity], Fact_Sales[Date])
 YTD_GrossProfit = TOTALYTD([Gross Profit], Fact_Sales[Date])
+```
