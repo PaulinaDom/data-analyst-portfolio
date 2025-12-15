@@ -2,14 +2,14 @@
 
 ## 📌 Project Overview
 
-This project is a *Power BI sales performance dashboard* focused on *Year-to-Date (YTD) vs Previous Year-To-Date (PYTD)* analysis.  
+This project is a *Power BI sales performance dashboard* focused on *Year-to-Date (YTD) vs Prior Year-To-Date (PYTD)* analysis.  
 The report allows users to dynamically analyze *Sales, Quantity, and Gross Profit* across multiple dimensions such as *time, country, customer account, and product hierarchy*.
 
 The key goal of the dashboard is to:
 - Compare current performance against the previous year
 - Identify positive and negative performance drivers
 - Enable flexible metric switching using slicers
-- Follow Power BI best practices in *data modeling (star schema), DAX design, and visual storytelling*
+- Follow Power BI best practices in *data modeling (star schema) and DAX design*
 
 > ⚠ *Credit*:  
 > This portfolio project is based on a tutorial and dataset created by *Mo Chen*.  
@@ -17,9 +17,9 @@ The key goal of the dashboard is to:
 > - GitHub repository: https://github.com/mochen862/power-bi-portfolio-project  
 > - YouTube video: https://youtu.be/BLxW9ZSuuVI  
 >
-> This repository represents *my own implementation*, with a strong focus on:
+> This repository represents *my own implementation*, with a focus on:
 > - Understanding and explaining each modeling and DAX decision  
-> - Writing clean, interview-ready documentation  
+> - Writing clean documentation  
 > - Applying Power BI best practices end-to-end  
 
 ---
@@ -27,13 +27,13 @@ The key goal of the dashboard is to:
 ## 🗂 Data Source & Dataset Description
 
 ### Data Source
-The dataset is provided as multiple .csv files in the original GitHub repository and represents *sales transaction data* for multiple years.
+The dataset is provided as a .csv file with multiple tables in the original GitHub repository and represents *sales transaction data* for years 2022, 2023 and 2024.
 
 ### Data Coverage
 - *Date range*: 01.01.2022 – 31.12.2024
 - *Granularity*: One row per sales transaction
 - *Currency*: USD
-- *Main business process*: Sales transactions including revenue, quantity, and cost
+- *Main business process*: Sales transactions including revenue, quantity, and cost with information about what products in which country has been sold
 
 ### Main Tables
 
@@ -41,6 +41,8 @@ The dataset is provided as multiple .csv files in the original GitHub repository
 *Fact_Sales*
 - Contains transactional sales data
 - Key columns include:
+  - Product_id – product identification number
+  - Account_id – account identification number
   - Date – transaction date
   - Sales_USD – sales revenue
   - Quantity – number of units sold
@@ -49,7 +51,7 @@ The dataset is provided as multiple .csv files in the original GitHub repository
 
 #### Dimension Tables
 The dataset includes several dimension tables that provide descriptive context:
-- *Dim_Date* – calendar table for time intelligence
+- *Dim_Date* – calendar table for time intelligence - created in Power BI using DAX
 - *Dim_Customer / Account* – customer-level information
 - *Dim_Product* – product hierarchy (type and name)
 - *Dim_Country* – geographical dimension
@@ -63,7 +65,7 @@ Each dimension table follows a *one-to-many relationship* with the fact table.
 Before loading the data into the Power BI model, several cleaning and preparation steps were performed:
 
 1. *Initial inspection in Excel*
-   - Reviewed raw .csv files to understand structure and data quality
+   - Reviewed raw .csv file to understand structure and data quality
 
 2. *Importing required tables into Power Query*
    - Only relevant tables were loaded into the model
@@ -83,7 +85,7 @@ Before loading the data into the Power BI model, several cleaning and preparatio
 
 ---
 
-## 🧠 Data Model & Star Schema Design (SAX)
+## 🧠 Data Model & Star Schema Design
 
 The report follows a *Star Schema* design, which is the recommended modeling approach for Power BI:
 
@@ -93,26 +95,20 @@ The report follows a *Star Schema* design, which is the recommended modeling app
 
 ### Key Modeling Decisions
 - Relationships that were not automatically detected were *manually created*
-- A dedicated *Date table (Dim_Date)* was created to support robust time intelligence
+- A dedicated *Date table (Dim_Date)* was created to support time intelligence
 - Clear separation between *facts, dimensions, and measures*
-
-This approach improves:
-- Performance
-- Readability
-- Scalability
-- DAX simplicity
 
 ---
 
 ## 📅 Date Table & Time Intelligence
 
 ### Date Table Creation
-A custom Dim_Date table was created covering the full dataset range:
+A custom Dim_Date table was created covering the full dataset range in years:
 - *Start*: 01.01.2022
 - *End*: 31.12.2024
 
 ### InPast Calculated Column
-To enable correct *PYTD calculations*, a calculated column was added to identify whether a date can be compared to a valid previous-year date.
+To enable correct *PYTD calculations*, a calculated column was added to identify whether a date can be used to compared to a valid previous-year date.
 
 ```DAX
 Inpast = 
