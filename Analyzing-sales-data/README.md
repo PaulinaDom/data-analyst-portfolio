@@ -131,6 +131,7 @@ Sales = SUM(Fact_Sales[Sales_USD])
 Quantity = SUM(Fact_Sales[quantity])
 Cost of Goods = SUM(Fact_Sales[COGS_USD])
 Gross Profit = [Sales] - [Cost of Goods]
+% Gross Profit = DIVIDE([Gross Profit], [Sales])
 ```
 
 ### YEar-to-date Measures
@@ -139,3 +140,72 @@ YTD_Sales = TOTALYTD([Sales], Fact_Sales[Date])
 YTD_Quantity = TOTALYTD([Quantity], Fact_Sales[Date])
 YTD_GrossProfit = TOTALYTD([Gross Profit], Fact_Sales[Date])
 ```
+
+### Prior-Year-to-date Measures
+```DAX
+PYTD_Sales = 
+CALCULATE(
+    [Sales],
+    SAMEPERIODLASTYEAR(Dim_Date[Date]),
+    Dim_Date[Inpast] = TRUE
+)
+
+PYTD_Quantity = 
+CALCULATE(
+    [Quantity],
+    SAMEPERIODLASTYEAR(Dim_Date[Date]),
+    Dim_Date[Inpast] = TRUE
+)
+
+PYTD_Gross_Profit = 
+CALCULATE(
+    [Gross Profit],
+    SAMEPERIODLASTYEAR(Dim_Date[Date]),
+    Dim_Date[Inpast] = TRUE
+)
+```
+
+## 🔀 Dynamic Metric Switching
+
+### Slicer Values Table
+A disconnected from the rest of the model Slicer_values table was created with one column containing three rows with following values:
+- Sales
+- Quantity
+- Gross Profit
+This table is used to dynamically switch metrics across the report.
+
+### Switch measures
+Switch measures were created to make the Base, YTD and PYTD measures dynamic - a user can switch between those depending on which value is selected in the slicer based on the Slicer_values table.
+```DAX
+Switch_PYTD = 
+VAR
+    selected_value = SELECTEDVALUE(Slicer_values[Values])
+VAR
+    result = SWITCH(selected_value,
+        "Sales", [PYTD_Sales],
+        "Quantity", [PYTD_Quantity],
+        "Gross Profit", [PYTD_Gross_Profit],
+        BLANK()
+    )
+RETURN
+result
+
+
+Switch_YTD = 
+VAR
+    selected_value = SELECTEDVALUE(Slicer_values[Values])
+VAR
+    result = SWITCH(selected_value,
+        "Sales", [YTD_Sales],
+        "Quantity", [YTD_Quantity],
+        "Gross Profit", [YTD_GrossProfit],
+        BLANK()
+    )
+RETURN
+result
+
+
+YTD vs PYTD = [Switch_YTD] - [Switch_PYTD]
+```
+## 📊 Visual Design and User Experience
+
