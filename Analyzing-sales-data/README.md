@@ -116,3 +116,23 @@ VAR lastsalesdate = MAX(Fact_Sales[Date])
 VAR lastsalesdatePY = EDATE(lastsalesdate, -12)
 RETURN
     Dim_Date[Date] <= lastsalesdatePY
+
+This ensures that PYTD values are calculated only whena valid comparison exists.
+
+## 📅 Measures Deisgn (DAX)
+
+### Measures Table
+A dedicated table called "MEasures where created to keep all measures in one place at the top of the tables list. This improves organization and makes the navigation easier for future maintenence.
+
+### Base Measures
+```DAX
+Sales = SUM(Fact_Sales[Sales_USD])
+Quantity = SUM(Fact_Sales[quantity])
+Cost of Goods = SUM(Fact_Sales[COGS_USD])
+Gross Profit = [Sales] - [Cost of Goods]
+
+### YEar-to-date Measures
+```DAX
+YTD_Sales = TOTALYTD([Sales], Fact_Sales[Date])
+YTD_Quantity = TOTALYTD([Quantity], Fact_Sales[Date])
+YTD_GrossProfit = TOTALYTD([Gross Profit], Fact_Sales[Date])
